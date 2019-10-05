@@ -7,3 +7,7 @@ Key Features:
 * Get origianl data ,not partial and low quality as [Visualizer]( https://developer.android.com/reference/android/media/audiofx/Visualizer) given.
 
 * Volume Independent - visualizer don't depend on player volume level.
+
+
+
+###### Thanks to [@gauravk95](https://github.com/gauravk95/) for *audio-visualizer-android*
