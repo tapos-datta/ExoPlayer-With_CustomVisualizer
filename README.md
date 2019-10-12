@@ -4,7 +4,7 @@
 
 Key Features:
 
-* Get origianl data ,not partial and low quality as [Visualizer]( https://developer.android.com/reference/android/media/audiofx/Visualizer) given.
+* Get original data ,not partial and low quality as [Visualizer]( https://developer.android.com/reference/android/media/audiofx/Visualizer) given.
 
 * Volume Independent - visualizer don't depend on player volume level.
 
