@@ -82,7 +82,7 @@ public class BarVisualizer extends BaseVisualizer implements AudioDataReceiver.A
 
             canvas.getClipBounds(mClipBounds);
 
-            mBarWidth = canvas.getWidth()  / nPoints;
+            mBarWidth = canvas.getWidth() / nPoints;
 
             //initialize points
             for (int i = 0; i < mSrcY.length; i++) {
@@ -98,9 +98,9 @@ public class BarVisualizer extends BaseVisualizer implements AudioDataReceiver.A
         }
 
         //create the path and draw
-        if (isVisualizationEnabled && mRawAudioBytes != null) {
+        if (isVisualizationEnabled && mRawAudioShort != null) {
 
-            if (mRawAudioBytes.length == 0) {
+            if (mRawAudioShort.length == 0) {
                 return;
             }
 
@@ -109,11 +109,11 @@ public class BarVisualizer extends BaseVisualizer implements AudioDataReceiver.A
                 float randPosY = mDestY[mRandom.nextInt(nPoints)];
                 for (int i = 0; i < mSrcY.length; i++) {
 
-                    int x = (int) Math.ceil((i + 1) * (mRawAudioBytes.length / nPoints));
+                    int x = (int) Math.ceil((i + 1) * (mRawAudioShort.length / nPoints));
                     int t = 0;
-                    if (x < 1024)
+                    if (x < mRawAudioShort.length)
                         t = canvas.getHeight() +
-                                ((byte) (Math.abs(mRawAudioBytes[x]) + 128)) * canvas.getHeight() / 128;
+                                ((short) (Math.abs(mRawAudioShort[x]) + 32768)) * canvas.getHeight() / 32768;
 
                     float posY;
                     if (mPositionGravity == PositionGravity.TOP)
@@ -144,13 +144,12 @@ public class BarVisualizer extends BaseVisualizer implements AudioDataReceiver.A
                 nBatchCount = 0;
 
         }
-
         super.onDraw(canvas);
     }
 
     @Override
-    public void setRawAudioBytes(byte[] bytes) {
-        this.mRawAudioBytes = bytes;
+    public void setRawAudioBytes(short[] shorts) {
+        this.mRawAudioShort = shorts;
         this.invalidate();
     }
 

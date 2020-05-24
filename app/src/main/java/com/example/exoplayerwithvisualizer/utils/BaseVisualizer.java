@@ -18,15 +18,9 @@ import com.example.exoplayerwithvisualizer.BarVisualizer;
 import com.example.exoplayerwithvisualizer.R;
 import com.example.exoplayerwithvisualizer.utils.AVConstants;
 
-/**
- * Base class for the visualizers
- * <p>
- * Created by gk
- */
-
 abstract public class BaseVisualizer extends View {
 
-    protected byte[] mRawAudioBytes;
+    protected short[] mRawAudioShort;
     protected Paint mPaint;
     protected int mColor = AVConstants.DEFAULT_COLOR;
 

@@ -1,6 +1,7 @@
 package com.example.exoplayerwithvisualizer;
 
 import java.nio.ByteBuffer;
+import java.nio.ShortBuffer;
 import java.util.Arrays;
 
 public class AudioDataReceiver implements AudioPlayer.AudioDataFetch {
@@ -20,16 +21,16 @@ public class AudioDataReceiver implements AudioPlayer.AudioDataFetch {
     @Override
     public void setAudioDataAsByteBuffer(ByteBuffer buffer, int sampleRate, int channelCount) {
         //raw PCM data
-        byte[] bufferArr = new byte[buffer.remaining()];
-        buffer.get(bufferArr);
-        buffer.rewind();
+        ShortBuffer shortBuffer = buffer.asShortBuffer();
+        short[] data = new short[shortBuffer.limit()];
+        shortBuffer.get(data);
 
         //frames par sample
-        int numFrames  = bufferArr.length / channelCount;
+        int numFrames  = data.length / channelCount;
 
-        byte[] rawData = new byte[numFrames];
+        short[] rawData = new short[numFrames];
 
-        int sum = 0;
+        long sum = 0;
 
         int val1 = 0;
 
@@ -37,24 +38,13 @@ public class AudioDataReceiver implements AudioPlayer.AudioDataFetch {
         for (int i = 0 ; i < numFrames ; i++) {
             sum = 0;
             for (int ch = 0; ch < channelCount; ch++) {
-
-                val1 = (int)bufferArr[channelCount * i + ch];
-
-                sum+= val1;
+                val1 = (int)(data[channelCount * i + ch]+ 32768);
+                sum += val1;
             }
-            rawData[i] = (byte)((sum/channelCount));
+            rawData[i] = (short) ((sum/channelCount));
         }
-
-        // Log.d("data_receiver", "  "+rawData.length+ " "+ bufferArr.length+"  "+channelCount);
-
-        //send partial data to visualizer
-        if(rawData.length>=1024) {
-
-            this.audioDataListener.setRawAudioBytes(Arrays.copyOf(rawData, 1024));
-        }
-        else{
-            this.audioDataListener.setRawAudioBytes(rawData.clone());
-        }
+        
+        this.audioDataListener.setRawAudioBytes(rawData.clone());
 
         setLocked(false);
 
@@ -70,6 +60,6 @@ public class AudioDataReceiver implements AudioPlayer.AudioDataFetch {
 
     public interface AudioDataListener{
 
-        void setRawAudioBytes(byte[] bytes);
+        void setRawAudioBytes(short[] shorts);
     }
 }
