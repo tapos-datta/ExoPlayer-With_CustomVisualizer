@@ -28,31 +28,22 @@ import com.google.android.exoplayer2.source.MediaSourceEventListener;
 import java.util.ArrayList;
 
 
-
 public class CustomRendererFactory extends DefaultRenderersFactory implements MediaSourceEventListener {
 
-    private AudioBufferSink listener;
     private AudioProcessor[] aMProcessors;
     private TeeAudioProcessor teeAudioProcessor;
-    private AudioRendererEventListener eventListener;
 
     public CustomRendererFactory(Context context, AudioBufferSink listener) {
         super(context);
-        this.listener = listener;
         teeAudioProcessor = new TeeAudioProcessor(listener);
 
     }
 
     @Override
     protected void buildAudioRenderers(Context context, int extensionRendererMode, MediaCodecSelector mediaCodecSelector, @Nullable DrmSessionManager<FrameworkMediaCrypto> drmSessionManager, boolean playClearSamplesWithoutKeys, boolean enableDecoderFallback, AudioProcessor[] audioProcessors, Handler eventHandler, AudioRendererEventListener eventListener, ArrayList<Renderer> out) {
-
         aMProcessors = new AudioProcessor[]{teeAudioProcessor};
-
         super.buildAudioRenderers(context, extensionRendererMode, mediaCodecSelector, drmSessionManager, playClearSamplesWithoutKeys, enableDecoderFallback, aMProcessors, eventHandler, eventListener, out);
     }
 
-    @Override
-    public void onDownstreamFormatChanged(int windowIndex, @Nullable MediaSource.MediaPeriodId mediaPeriodId, MediaLoadData mediaLoadData) {
-        Log.d("kuykuy", "onDownstreamFormatChanged: ");
-    }
+
 }

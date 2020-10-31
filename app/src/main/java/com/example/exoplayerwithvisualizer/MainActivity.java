@@ -12,8 +12,6 @@ import android.view.View;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private static final int PERM_REQ_CODE = 23;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,25 +22,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
-
+        switch (view.getId()) {
             case R.id.v_bar_btn:
-                if (checkAudioPermission())
-                    launchSpikyWaveActivity();
-                else
-                    requestAudioPermission();
-                break;
+                launchSpikyWaveActivity();
         }
     }
-
-    private boolean checkAudioPermission() {
-        return ActivityCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED;
-    }
-
-    private void requestAudioPermission() {
-        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO}, PERM_REQ_CODE);
-    }
-
 
     private void launchSpikyWaveActivity() {
         Intent intent = new Intent(MainActivity.this, BarActivity.class);

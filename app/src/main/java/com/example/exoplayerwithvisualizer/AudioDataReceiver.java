@@ -6,7 +6,7 @@ import java.util.Arrays;
 
 public class AudioDataReceiver implements AudioPlayer.AudioDataFetch {
 
-    public boolean isLocked;
+    public volatile boolean isLocked;
     private AudioDataListener audioDataListener;
 
     public AudioDataReceiver(){
@@ -43,11 +43,8 @@ public class AudioDataReceiver implements AudioPlayer.AudioDataFetch {
             }
             rawData[i] = (short) ((sum/channelCount));
         }
-        
         this.audioDataListener.setRawAudioBytes(rawData.clone());
-
         setLocked(false);
-
     }
 
     public boolean isLocked() {

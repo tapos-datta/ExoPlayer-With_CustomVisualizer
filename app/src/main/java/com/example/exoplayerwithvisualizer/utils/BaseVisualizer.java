@@ -16,7 +16,7 @@ import androidx.annotation.Nullable;
 
 import com.example.exoplayerwithvisualizer.BarVisualizer;
 import com.example.exoplayerwithvisualizer.R;
-import com.example.exoplayerwithvisualizer.utils.AVConstants;
+
 
 abstract public class BaseVisualizer extends View {
 
@@ -156,12 +156,6 @@ abstract public class BaseVisualizer extends View {
         this.mPaint.setStrokeWidth(width);
     }
 
-
-//    public void setRawAudioBytes(byte[] bytes) {
-//        this.mRawAudioBytes = bytes;
-//        this.invalidate();
-//    }
-
     /**
      * Enable Visualization
      */
@@ -179,9 +173,8 @@ abstract public class BaseVisualizer extends View {
     protected abstract void init();
 
 
-
     /**
-     model
+     * model
      */
     public enum AnimSpeed {
         SLOW,

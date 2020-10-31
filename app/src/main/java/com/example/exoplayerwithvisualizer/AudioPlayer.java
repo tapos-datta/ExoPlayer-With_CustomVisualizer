@@ -21,7 +21,7 @@ import java.nio.ByteBuffer;
 
 import static com.google.android.exoplayer2.C.TRACK_TYPE_AUDIO;
 
-public class AudioPlayer implements MediaSourceEventListener{
+public class AudioPlayer implements MediaSourceEventListener {
 
     public AudioDataReceiver audioDataReceiver;
     public static AudioDataFetch audioDataFetch;
@@ -29,43 +29,38 @@ public class AudioPlayer implements MediaSourceEventListener{
     public static int channels;
     private SimpleExoPlayer player;
 
-    public AudioPlayer(SimpleExoPlayer player){
-
+    public AudioPlayer(SimpleExoPlayer player) {
         this.player = player;
         //set a callback to receive audio data
-         audioDataReceiver = new AudioDataReceiver();
+        audioDataReceiver = new AudioDataReceiver();
         setAudioDataFetch((AudioDataFetch) audioDataReceiver);
     }
 
 
-    public void play(Context context, int resId){
-
-        if(player!=null)
-        {
+    public void play(Context context, int resId) {
+        if (player != null) {
             stop();
         }
 
         final CustomRendererFactory rendererFactory = new CustomRendererFactory(context, new TeeAudioProcessor.AudioBufferSink() {
             int counter = 0;
-
             @Override
             public void flush(int sampleRateHz, int channelCount, int encoding) {
-                // nothing to here
+                // nothing to do here
             }
+
             @Override
             public void handleBuffer(ByteBuffer buffer) {
                 counter++;
-                if(!audioDataReceiver.isLocked()){
+                if (!audioDataReceiver.isLocked()) {
                     audioDataReceiver.setLocked(true);
-                    audioDataFetch.setAudioDataAsByteBuffer(buffer.duplicate(),sampleRate,channels);
-                }
-                else{
-                    Log.d("main_Activity", "handleBuffer: skipped no"+ counter);
+                    audioDataFetch.setAudioDataAsByteBuffer(buffer.duplicate(), sampleRate, channels);
+                } else {
+                    Log.d("main_Activity", "handleBuffer: skipped no" + counter);
                 }
             }
         });
-
-        player = new SimpleExoPlayer.Builder(context,rendererFactory).build();
+        player = new SimpleExoPlayer.Builder(context, rendererFactory).build();
 
         //create datasource from resource
         DataSpec dataSpec = new DataSpec(RawResourceDataSource.buildRawResourceUri(resId));
@@ -78,7 +73,7 @@ public class AudioPlayer implements MediaSourceEventListener{
 
         DefaultDataSourceFactory dataSourceFactory = new DefaultDataSourceFactory(context, Util.getUserAgent(context, "Visualizer"));
         final ProgressiveMediaSource mediaSource = new ProgressiveMediaSource.Factory(dataSourceFactory).createMediaSource(rawResourceDataSource.getUri());
-        mediaSource.addEventListener(new Handler(),this);
+        mediaSource.addEventListener(new Handler(), this);
 
         //load datasource into player
         player.setPlayWhenReady(true);
@@ -86,10 +81,8 @@ public class AudioPlayer implements MediaSourceEventListener{
     }
 
 
-    public void stop(){
-
-        if(player!=null)
-        {
+    public void stop() {
+        if (player != null) {
             player.stop();
             player.setPlayWhenReady(false);
             player.seekTo(0);
@@ -99,8 +92,7 @@ public class AudioPlayer implements MediaSourceEventListener{
 
     @Override
     public void onDownstreamFormatChanged(int windowIndex, @Nullable MediaSource.MediaPeriodId mediaPeriodId, MediaLoadData mediaLoadData) {
-
-        if(mediaLoadData.trackType == TRACK_TYPE_AUDIO){
+        if (mediaLoadData.trackType == TRACK_TYPE_AUDIO) {
             channels = mediaLoadData.trackFormat.channelCount;
             sampleRate = mediaLoadData.trackFormat.sampleRate;
         }
@@ -111,7 +103,7 @@ public class AudioPlayer implements MediaSourceEventListener{
     }
 
 
-    public interface AudioDataFetch{
+    public interface AudioDataFetch {
         void setAudioDataAsByteBuffer(ByteBuffer buffer, int sampleRate, int channelCount);
     }
 }
