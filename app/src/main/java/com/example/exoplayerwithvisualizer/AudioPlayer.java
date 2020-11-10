@@ -1,13 +1,16 @@
 package com.example.exoplayerwithvisualizer;
 
 import android.content.Context;
+import android.net.Uri;
 import android.os.Handler;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
 
+import com.google.android.exoplayer2.MediaItem;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.audio.TeeAudioProcessor;
+import com.google.android.exoplayer2.source.MediaLoadData;
 import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.source.MediaSourceEventListener;
 import com.google.android.exoplayer2.source.ProgressiveMediaSource;
@@ -65,19 +68,16 @@ public class AudioPlayer implements MediaSourceEventListener {
         //create datasource from resource
         DataSpec dataSpec = new DataSpec(RawResourceDataSource.buildRawResourceUri(resId));
         final RawResourceDataSource rawResourceDataSource = new RawResourceDataSource(context);
-        try {
-            rawResourceDataSource.open(dataSpec);
-        } catch (RawResourceDataSource.RawResourceDataSourceException e) {
-            e.printStackTrace();
-        }
+        Uri uri = rawResourceDataSource.buildRawResourceUri(resId);
 
         DefaultDataSourceFactory dataSourceFactory = new DefaultDataSourceFactory(context, Util.getUserAgent(context, "Visualizer"));
-        final ProgressiveMediaSource mediaSource = new ProgressiveMediaSource.Factory(dataSourceFactory).createMediaSource(rawResourceDataSource.getUri());
+        final ProgressiveMediaSource mediaSource = new ProgressiveMediaSource.Factory(dataSourceFactory).createMediaSource(MediaItem.fromUri(uri));
         mediaSource.addEventListener(new Handler(), this);
 
         //load datasource into player
-        player.setPlayWhenReady(true);
-        player.prepare(mediaSource);
+        player.setMediaSource(mediaSource);
+        player.prepare();
+        player.play();
     }
 
 
