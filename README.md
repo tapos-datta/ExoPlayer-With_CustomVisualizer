@@ -10,7 +10,7 @@
 
 ## Requirements:
 * Gradle 6.4.1
-* ExoPlayer 2.11.3
+* ExoPlayer 2.12.0
 
 
 #### Thanks to [@gauravk95](https://github.com/gauravk95/) for *audio-visualizer-android*
